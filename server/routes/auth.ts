@@ -5,7 +5,7 @@ import UserRepo from '../repository/UserRepo';
 //const UserUploadService = require('../service/UserUploadService')
 const router = express.Router();
 import { body, validationResult } from 'express-validator';
-//import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 var jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'Harryisagoodb$oy';
@@ -25,17 +25,19 @@ router.post('/createuser', [
 //   }
 try {
             //const file = req.file
-
-            const userUploadService = new UserUploadService({
+            const salt = await bcrypt.genSalt(10);
+            const secPass = await bcrypt.hash(req.body.password, salt);
+            const user = {
                 UserName: req.body.username,
                 email:req.body.email,
-                password:req.body.password,
+                password:secPass,
                 uniqueFileName:req.body.uniquelink,
-            })
+            }
+            const userUploadService = new UserUploadService(user)
 
             //const fileUploadService = new FileUploadService(file)
             const fileId = await userUploadService.createFileUpload();
-            console.log(fileId)
+            
             if (fileId === 0) {
                 
                 return res.status(500).json({
@@ -43,11 +45,15 @@ try {
                     message: 'Error uploading file'
                 })
             }
-
-            res.json({
-                success: true,
-                fileId
-            })
+            
+                const data = {
+                    user:{
+                        id:fileId
+                    }
+                }
+                // res.json(fileId)
+                const authtoken = jwt.sign(data, JWT_SECRET);
+                res.json({authtoken})
         } catch (error) {
             console.log(error)
             res.json({
