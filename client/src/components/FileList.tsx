@@ -45,6 +45,20 @@ function FileList(props: Props) {
     if (fileList.length === 0) {
         return null
     }
+    const deleteFile = async (fileId: number) => {
+        // const response = await fetch('http://localhost:5000/deleteFile', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         fileId
+        //     })
+        // })
+        console.log("Deleting the note with id" + fileId);
+        const newFiles = fileList.filter((note)=>{return note.fileId!==fileId})
+        setFileList(newFiles)
+    }
 
     return (
         <Flex
@@ -60,7 +74,7 @@ function FileList(props: Props) {
                 {
                     fileList.map(({ fileId, fileName }) => (
                         <ListItem key={fileId}>
-                            <Link color="blue.400" onClick={() => handleFileDownload(fileId)}>{fileName}</Link>
+                            <Link color="blue.400" onClick={() => handleFileDownload(fileId)}>{fileName} </Link><i className="fa fa-solid fa-trash" onClick={()=>{deleteFile(fileId)}}></i>
                         </ListItem>
                     ))
                 }
