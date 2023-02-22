@@ -50,7 +50,7 @@ function FileUpload(props: Props) {
         }
 
         const fileService = new FileService(file[0])
-        const fileUploadResponse = await fileService.uploadFile()
+        const fileUploadResponse = await fileService.uploadFile2()
 
         element.value = ''
 
@@ -63,6 +63,7 @@ function FileUpload(props: Props) {
             duration: 3000,
             isClosable: true
         })
+        //setFileId(fileUploadResponse.fileId ?? 0)
     }
 
     return (

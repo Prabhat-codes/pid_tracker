@@ -25,8 +25,8 @@ class FileUploadService
     }
     async createFileUpload(): Promise<number> {
         const uniqueFileName = this.createUniqueFileName()
-        const fileId = await this.createFileRecord(uniqueFileName)
-        
+        //const fileId = await this.createFileRecord(uniqueFileName)
+        const fileId = 1
         this.writeToFileStream(uniqueFileName)
 
         return fileId
@@ -46,14 +46,14 @@ class FileUploadService
             fileExtension: this.getFileExtension(),
         })
     }
-    private async createFileRecord(uniqueFileName: string): Promise<number> {
-        return await fileRepo.createFileRecord({
-            originalFileName: this.file.originalname,
-            uniqueFileName,
-            fileSize: this.file.size,
-            fileExtension: this.getFileExtension(),
-        })
-    }
+    // private async createFileRecord(uniqueFileName: string): Promise<number> {
+    //     return await fileRepo.createFileRecord({
+    //         originalFileName: this.file.originalname,
+    //         uniqueFileName,
+    //         fileSize: this.file.size,
+    //         fileExtension: this.getFileExtension(),
+    //     })
+    // }
 
     private writeToFileStream(uniqueFileName: string) {
         const fileStream = fs.createWriteStream(`${__dirname}/../img/${uniqueFileName}`)

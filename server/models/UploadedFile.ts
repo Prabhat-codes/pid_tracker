@@ -1,5 +1,5 @@
 interface UploadedFile {
-    uid?:number,
+    uid:number,
     originalFileName: string,
     uniqueFileName: string,
     fileSize: number,

@@ -24,6 +24,30 @@ class FileService
     async uploadFile(): Promise<UploadFileResponse> {
         const uploadResponse = await fetch('http://localhost:5000/uploadFile', {
             method: 'POST',
+            
+            body: this.getFormData()
+        })
+
+        const responseJson = await uploadResponse.json()
+
+        if (responseJson.success === false) {
+            return {
+                success: false,
+                message: responseJson.message
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Uploaded Successfully'
+        }
+    }
+    async uploadFile2(): Promise<UploadFileResponse> {
+        const uploadResponse = await fetch('http://localhost:5000/api/files/addfile', {
+            method: 'POST',
+            headers:{
+                'auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo4fSwiaWF0IjoxNjc3MDczMTgxfQ.Pcu-Shc1-VaCfOpr4g7kAkrJSor6AXtw6AuhjSqlcKk'
+            },
             body: this.getFormData()
         })
 

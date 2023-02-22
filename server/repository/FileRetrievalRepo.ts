@@ -35,6 +35,31 @@ class FileRetrievalRepo {
             return []
         }
     }
+    async findFileByUid(uId: number): Promise<false | { fileId: number, fileName: string }> {
+        try {
+            return await new Promise((resolve, reject) => {
+                const selects = [
+                    'file_id AS fileId',
+                    'file_name AS fileName'
+                ]
+
+                connection.query(
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE user_id = ?`,
+                    [uId],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        //console.log(results)
+                        resolve(results)
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+    }
     async findFileById(fileId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
         try {
             return await new Promise((resolve, reject) => {
@@ -85,31 +110,31 @@ class FileRetrievalRepo {
     //         return false
     //     }
     // }
-    async findFileByUid(id:number): Promise<false | File> {
-        try {
-            return await new Promise((resolve, reject) => {
-                // const selects = [
-                //     'unique_User_name AS password',
-                //     'User_name AS email'
-                // ]
+    // async findFileByUid(id:number): Promise<false | File> {
+    //     try {
+    //         return await new Promise((resolve, reject) => {
+    //             // const selects = [
+    //             //     'unique_User_name AS password',
+    //             //     'User_name AS email'
+    //             // ]
 
-                connection.query(
-                    `SELECT * FROM user WHERE uid = ? LIMIT 1`,
-                    [id],
-                    (error, results) => {
-                        if (error) {
-                            console.log(error)
-                            reject(false)
-                        }
-                        console.log(results)
-                        resolve(results[0])
-                    }
-                )
-            })
-        } catch (error) {
-            return false
-        }
-    }
+    //             connection.query(
+    //                 `SELECT * FROM user WHERE uid = ? LIMIT 1`,
+    //                 [id],
+    //                 (error, results) => {
+    //                     if (error) {
+    //                         console.log(error)
+    //                         reject(false)
+    //                     }
+    //                     console.log(results)
+    //                     resolve(results[0])
+    //                 }
+    //             )
+    //         })
+    //     } catch (error) {
+    //         return false
+    //     }
+    // }
 }
 
 export default FileRetrievalRepo.getInstance()

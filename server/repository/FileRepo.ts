@@ -17,8 +17,9 @@ class FileRepo {
         try {
             return await new Promise((resolve, reject) => {
                 connection.query(
-                    "INSERT INTO uploaded_file (file_name, unique_file_name, file_size, file_extension) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO uploaded_file (user_id, file_name, unique_file_name, file_size, file_extension) VALUES (?, ?, ?, ?, ?)",
                     [
+                        file.uid,
                         file.originalFileName,
                         file.uniqueFileName,
                         file.fileSize,
@@ -29,6 +30,7 @@ class FileRepo {
                             console.log(error.message)
                             reject(0)
                         }
+                        console.log(results)
                         resolve(results.insertId)
                     }
                 )
