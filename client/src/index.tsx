@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Login from './components/Login';
+import SignUp from './components/SignUp';
 
 
 ReactDOM.render(
@@ -20,6 +21,9 @@ ReactDOM.render(
           </Switch>
           <Switch>
             <Route path="/login" element={<Login />} />
+          </Switch>
+          <Switch>
+            <Route path="/signup" element={<SignUp></SignUp>} />
           </Switch>
       </Router> 
   </div>

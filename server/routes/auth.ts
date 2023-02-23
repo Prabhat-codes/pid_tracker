@@ -58,7 +58,7 @@ try {
                 }
                 // res.json(fileId)
                 const authtoken = jwt.sign(data, JWT_SECRET);
-                res.json({authtoken})
+                res.json({success:true,authtoken})
         } catch (error) {
             console.log(error)
             res.json({
