@@ -46,7 +46,7 @@ class FileService
         const uploadResponse = await fetch('http://localhost:5000/api/files/addfile', {
             method: 'POST',
             headers:{
-                'auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo5fSwiaWF0IjoxNjc3MDg2NzI1fQ.neuM7WAF0N05J-VRjbEgA3tqD6nEj9weHowdfWe3pOQ'
+                'auth-token':localStorage.getItem('token') || ''
             },
             body: this.getFormData()
         })

@@ -1,11 +1,18 @@
 import { ChakraProvider,Box } from '@chakra-ui/react' 
 import Files from './Files'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FileUpload from './FileUpload'
 import FileList from './FileList'
-
+import { useNavigate } from 'react-router-dom';
 function Main() {
     const [fileId, setFileId] = useState<number>(0)
+    let navigate = useNavigate();
+    useEffect(()=>{
+        if(!localStorage.getItem('token'))
+        {
+            navigate('/login')
+        }
+    },[])
     return (
         <ChakraProvider>
             <Box
