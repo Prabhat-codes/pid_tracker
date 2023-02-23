@@ -165,6 +165,7 @@ router.post('/getuser', async (req, res) => {
       res.status(401).send({ error: "Please authenticate using a valid token" })
   }
   try {
+    
     const data = jwt.verify(token, JWT_SECRET);
     console.log(data);
     
