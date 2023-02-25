@@ -42,6 +42,7 @@ function Main() {
                     <FileUpload setFileId={setFileId} />
                 </Box>
                 <FileList fileId={fileId}/>
+                
             </Box>
         </ChakraProvider>
     )

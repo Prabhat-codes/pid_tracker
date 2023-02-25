@@ -85,6 +85,56 @@ class FileRetrievalRepo {
         }
     }
 
+    async findPendingFilesforReview(userId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
+        try {
+            return await new Promise((resolve, reject) => {
+                const selects = [
+                    'unique_file_name AS uniqueFileName',
+                    'file_name AS fileName'
+                ]
+
+                connection.query(
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE reviewer_id = ? AND reviewed = false LIMIT 1`,
+                    [userId],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        resolve(results[0])
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+    }
+
+    async findReviewedFiles(userId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
+        try {
+            return await new Promise((resolve, reject) => {
+                const selects = [
+                    'unique_file_name AS uniqueFileName',
+                    'file_name AS fileName'
+                ]
+
+                connection.query(
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE reviewer_id = ? AND reviewed = true LIMIT 1`,
+                    [userId],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        resolve(results[0])
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+    }
+
     // async findUserBymail(email:string): Promise<false | User> {
     //     try {
     //         return await new Promise((resolve, reject) => {
