@@ -42,7 +42,17 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
             })
         }
         // Method to get a user whose currentl_reviewing status is false
-        
+        const user = await UserRetrievalRepo.getUserByStatus(data.user.id)
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Request'
+            })
+        }
+
+        // Method to set the current_reviewing status of the reviewer to true
+       
+
 
         
     } catch (error) {

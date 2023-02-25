@@ -85,6 +85,34 @@ class UserRetrievalRepo {
         } catch (error) {
             return false
         }
+
+    }
+
+    async getUserByStatus(id:number): Promise<false | User> {
+        try {
+            return await new Promise((resolve, reject) => {
+                // const selects = [
+                //     'unique_User_name AS password',
+                //     'User_name AS email'
+                // ]
+
+                connection.query(
+                    `SELECT * FROM user WHERE user_id != ? AND currently_reviewing = false LIMIT 1`,
+                    [id],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log(results)
+                        resolve(results[0])
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+
     }
 }
 

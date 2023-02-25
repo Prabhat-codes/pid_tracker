@@ -23,7 +23,6 @@ class UserRepo {
                         user.UserName,
                         user.email,
                         user.password,
-                        user.uniqueFileName,
                     ],
                     (error, results) => {
                         if (error) {
