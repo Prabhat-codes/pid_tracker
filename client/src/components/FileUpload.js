@@ -8,26 +8,47 @@ import {
     createStandaloneToast
 } from '@chakra-ui/react'
 
+import {
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+  } from '@chakra-ui/react'
+  import { Textarea } from '@chakra-ui/react'
+
 import AcceptedFileTypesModal from './AcceptedFileTypesModal'
 import { validateFileSize, validateFileType } from '../service/fileValidatorService'
 import FileService from '../service/fileService'
+//import { Form } from "react-final-form"
+// interface Props {
+//     setFileId: Dispatch<SetStateAction<number>>
+// }
 
-interface Props {
-    setFileId: Dispatch<SetStateAction<number>>
-}
 
 
-
-function FileUpload(props: Props) {
+function FileUpload(props) {
     const {
         setFileId
     } = props
-    const [isFileTypesModalOpen, setIsFilesTypeModalOpen] = useState<boolean>(false)
-    const [uploadFormError, setUploadFormError] = useState<string>('')
+    const [isFileTypesModalOpen, setIsFilesTypeModalOpen] = useState(false)
+    const [uploadFormError, setUploadFormError] = useState('')
+    const [value,setvalue] = useState('')
 
-    const handleFileUpload = async (element: HTMLInputElement) => {
+    const handleInputChange = (e) => {
+        let inputValue = e.target.value
+        setvalue(inputValue)
+      }
+      const handleSubmit = async (e) =>{
+        console.log(e);
+        handleFileUpload(e.target[1])
+        e.preventDefault();
+        
+      }
+    const handleFileUpload = async (element) => {
+        //element.preventDefault()
+        console.log(element)
         const file = element.files
-
+        
         if (!file) {
             return
         }
@@ -94,11 +115,27 @@ function FileUpload(props: Props) {
                     mt="10"
                     ml="24"
                 >
-                    <Input
-                        type="file"
-                        variant="unstyled"
-                        onChange={(e: SyntheticEvent) => handleFileUpload(e.currentTarget as HTMLInputElement)}
-                    />
+                    <form  onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Add Comments</label>
+                            <textarea className="form-control" id="exampleFormControlTextarea1" onChange={handleInputChange}
+                            placeholder='Add Comments'></textarea>
+                        </div>
+                        {/* <FormLabel>Add File</FormLabel> */}
+                        {/* <Input
+                            type="file"
+                            variant="unstyled"
+                            //onChange={(e: SyntheticEvent) => handleFileUpload(e.currentTarget as HTMLInputElement)}
+                        /> */}
+                        <div className="mb-3">
+                            <label htmlFor="formFile" className="form-label">Add File</label>
+-                            <input className="form-control" type="file" id="formFile" 
+                                    //onChange={(e) => handleFileUpload(e.currentTarget)}
+                                    />
+                        </div>
+                        <button type="submit" className="btn btn-primary mb-3">Submit</button>
+                    </form>
+                    
                 </Box>
             </Flex>
             <AcceptedFileTypesModal 
