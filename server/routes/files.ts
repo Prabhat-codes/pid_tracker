@@ -35,7 +35,7 @@ router.get('/fetchfiles',upload.none(), async (req, res) => {
     //console.log(files)
     var str = JSON.stringify(files)
     var json = JSON.parse(str)
-    //console.log(json);
+    console.log(json);
     //console.log(files=== false ? {} : files);
     //const user = await User.findById(userId).select("-password")
     res.send(json)
@@ -58,7 +58,7 @@ router.post('/addfile',upload.single('file'), async (req, res) => {
             }
             const data = jwt.verify(token, JWT_SECRET);
             const file = req.file
-
+            const comment = req.body.comment
             const validFileType = await validateFileType(path.extname(file.originalname))
             const validFileSize = await validateFileSize(file.size)
             if (!validFileType.isValid || !validFileSize.isValid) {
@@ -69,7 +69,7 @@ router.post('/addfile',upload.single('file'), async (req, res) => {
             }
 
             const fileUploadService = new FileUploadService(file)
-            const fileId = await fileUploadService.createFileUpload2(data.user.id)
+            const fileId = await fileUploadService.createFileUpload2(data.user.id,comment)
             if (fileId === 0) {
                 return res.status(500).json({
                     success: false,

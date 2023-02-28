@@ -6,9 +6,11 @@ interface UploadFileResponse {
 class FileService 
 {
     private file: File
+    private comment:string
 
-    constructor(file: File) {
+    constructor(file: File,comment:string) {
         this.file = file
+        this.comment = comment
     }
 
     static getFileExtension(fileName: string): string {
@@ -69,6 +71,7 @@ class FileService
     private getFormData(): FormData {
         const formData = new FormData()
         formData.append('file', this.file)
+        formData.append('comment', this.comment)
         return formData
     }
 }

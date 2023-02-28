@@ -39,12 +39,12 @@ function FileUpload(props) {
         setvalue(inputValue)
       }
       const handleSubmit = async (e) =>{
-        console.log(e);
-        handleFileUpload(e.target[1])
+        console.log(e.target[0].value);
+        handleFileUpload(e.target[1],e.target[0].value)
         e.preventDefault();
         
       }
-    const handleFileUpload = async (element) => {
+    const handleFileUpload = async (element,comment) => {
         //element.preventDefault()
         console.log(element)
         const file = element.files
@@ -70,7 +70,7 @@ function FileUpload(props) {
             setUploadFormError('')
         }
 
-        const fileService = new FileService(file[0])
+        const fileService = new FileService(file[0],comment)
         const fileUploadResponse = await fileService.uploadFile2()
 
         element.value = ''

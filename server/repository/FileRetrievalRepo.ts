@@ -35,12 +35,13 @@ class FileRetrievalRepo {
             return []
         }
     }
-    async findFileByUid(uId: number): Promise<false | { fileId: number, fileName: string }> {
+    async findFileByUid(uId: number): Promise<false | { fileId: number, fileName: string , comment:string }> {
         try {
             return await new Promise((resolve, reject) => {
                 const selects = [
                     'file_id AS fileId',
-                    'file_name AS fileName'
+                    'file_name AS fileName',
+                    'comment AS comment',
                 ]
 
                 connection.query(

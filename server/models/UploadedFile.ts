@@ -3,7 +3,8 @@ interface UploadedFile {
     originalFileName: string,
     uniqueFileName: string,
     fileSize: number,
-    fileExtension: string
+    fileExtension: string,
+    comment:string,
 }
 
 export default UploadedFile

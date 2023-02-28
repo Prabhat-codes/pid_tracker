@@ -22,7 +22,7 @@ function FileList(props: Props) {
     //const context = useContext(FileContext);
     //const {Files, getFiles} = context;
     const host = "http://localhost:5000"
-    const [fileList, setFileList] = useState<Array<{ fileId: number, fileName: string }>>([])
+    const [fileList, setFileList] = useState<Array<{ fileId: number, fileName: string , comment:string }>>([])
     // const getFiles = async ()=>{
     //     const response = await fetch("http://localhost:5000/api/files/fetchfiles", {
     //         method: 'GET',
@@ -91,25 +91,40 @@ function FileList(props: Props) {
     }
 
     return (
-        <Flex
-            direction="column"
-            justify="center"
-            alignItems="center"
-        >
+        <div className='row my-3'>
             <Text
                 fontSize="2xl"
                 mb="4"
             >Uploaded Files</Text>
-            <UnorderedList>
-                {
-                     fileList.map(({ fileId, fileName }) => (
-                        <ListItem key={fileId}>
-                            <Link color="blue.400" onClick={() => handleFileDownload(fileId)}>{fileName} </Link><i className="fa fa-solid fa-trash" onClick={()=>{deleteFile(fileId)}}></i>
-                        </ListItem>
-                    ))
-                }
-            </UnorderedList>
-        </Flex>
+            {fileList.map(({ fileId, fileName, comment }) => (
+                        <div className="col-md-4" key={fileId}>
+                            <div className="card my-3 text-center d-flex">
+                            <div className="card-header">
+                                File : {fileName}
+                            </div>
+                            <div className="card-body">
+                                <h5 className="card-title"><b>Comment:</b></h5>
+                                <p className="card-text">{comment}</p>
+                                <Link to="/" onClick={() => handleFileDownload(fileId)} className="btn btn-primary">Download File</Link>
+                            </div>
+                            <div className="card-footer text-muted">
+                                2 days ago
+                            </div>
+                        </div>
+                        </div>
+                        
+                        
+                    
+                ))}
+        </div>
+        
+            
+            
+                
+                     
+                
+            
+        
     )
 }
 
