@@ -77,6 +77,7 @@ class FileRetrievalRepo {
                             console.log(error)
                             reject(false)
                         }
+                        console.log(results)
                         resolve(results[0])
                     }
                 )
@@ -86,12 +87,13 @@ class FileRetrievalRepo {
         }
     }
 
-    async findPendingFilesforReview(userId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
+    async findPendingFilesforReview(userId: number): Promise<false | { fileId: number, fileName: string, comment:string }> {
         try {
             return await new Promise((resolve, reject) => {
                 const selects = [
-                    'unique_file_name AS uniqueFileName',
-                    'file_name AS fileName'
+                    'file_id AS fileId',
+                    'file_name AS fileName',
+                    'comment AS comment',
                 ]
 
                 connection.query(
@@ -102,7 +104,8 @@ class FileRetrievalRepo {
                             console.log(error)
                             reject(false)
                         }
-                        resolve(results[0])
+                        console.log(results)
+                        resolve(results)
                     }
                 )
             })

@@ -19,8 +19,7 @@ const JWT_SECRET = 'Harryisagoodb$oy';
 router.post('/createuser', [
   body('username', 'Enter a valid name').isLength({ min: 3 }),
   body('email', 'Enter a valid email').isEmail(),
-  body('password', 'Password must be atleast 5 characters').isLength({ min: 5 }),
-  body('uniquelink')
+  body('password', 'Password must be atleast 5 characters').isLength({ min: 5 })
 ], async (req:express.Request, res:express.Response) => {
   // If there are errors, return Bad request and the errors
   
@@ -36,7 +35,7 @@ try {
                 UserName: req.body.username,
                 email:req.body.email,
                 password:secPass,
-                uniqueFileName:req.body.uniquelink,
+                currently_reviewing:false,
             }
             const userUploadService = new UserUploadService(user)
 
@@ -131,7 +130,7 @@ router.post('/login', [
   try {
     //const userRetrievalRepo = new UserRetrievalRepo();
     const user = await UserRetrievalRepo.findUserBymail(email);
-    console.log(user)
+    //console.log(user)
     if(!user){
       return res.status(400).json({ success, error: "Please try to login with correct credentials" });
     }
@@ -167,11 +166,11 @@ router.post('/getuser', async (req, res) => {
   try {
     
     const data = jwt.verify(token, JWT_SECRET);
-    console.log(data);
+    //console.log(data);
     
     //const userId = req.user.id;
     const user = await UserRetrievalRepo.findUserById(data.user.id)
-    console.log(user);
+    //console.log(user);
     //const user = await User.findById(userId).select("-password")
     res.send(user)
   } catch (error) {

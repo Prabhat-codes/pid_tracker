@@ -28,9 +28,11 @@ router.get('/pendingreview',upload.none(),  async (req, res) => {
   }
   try {
     const data = jwt.verify(token, JWT_SECRET);
-    const files = FileRetrievalRepo.findPendingFilesforReview(data.user.id)
+    const files = await FileRetrievalRepo.findPendingFilesforReview(data.user.id)
     var str = JSON.stringify(files)
     var json = JSON.parse(str)
+    console.log("Revieiwer Pending")
+    console.log(json)
     res.send(json)
   } catch (error) {
     console.error(error);
@@ -58,3 +60,6 @@ router.get('/reviewerhistory',upload.none(),  async (req, res) => {
 })
 
 // Route 3 :(Effectively sending to developer) ADD a file to the server and make it's reviewed == false (file_field) to true and send to developer_id (and then delete the current file which has reviewed==false) . Also set currently_reviewing to true (actually no, it will depend on the developer if or not he wants to close the current file review process , if implemented this way then there's gonnna the the reviewer will be blocked from reviewing other files but if not implemented this way then there wont be one to one communication for a certain PID between dev and reviewer. One alternative is for a queue of pending reviews for the reviewer which will defeat the point single request :') ).
+
+
+module.exports = router

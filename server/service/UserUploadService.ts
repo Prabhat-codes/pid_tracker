@@ -30,6 +30,7 @@ class UserUploadService
                 UserName: this.file.UserName,
                 email:this.file.email,
                 password:this.file.password,
+                currently_reviewing:this.file.currently_reviewing
         })
     }
 

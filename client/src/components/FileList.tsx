@@ -45,7 +45,7 @@ function FileList(props: Props) {
     //     }).then(response => response.json()).then(data => setFileList(data.files))
     // }
     useEffect(() =>{
-        fetch('http://localhost:5000/api/files/fetchfiles', {
+        fetch('http://localhost:5000/api/reviewer/pendingreview', {
             method: 'GET',
             headers:{
                 'auth-token': localStorage.getItem('token') || ''

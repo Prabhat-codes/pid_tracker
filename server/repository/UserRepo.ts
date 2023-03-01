@@ -18,7 +18,7 @@ class UserRepo {
             return await new Promise((resolve, reject) => {
                 console.log("userrepo_hello")
                 connection.query(
-                    "INSERT INTO user (user_name,email,password,unique_file_name) VALUES (?,?,?,?)",
+                    "INSERT INTO user (user_name,email,password) VALUES (?,?,?)",
                     [
                         user.UserName,
                         user.email,

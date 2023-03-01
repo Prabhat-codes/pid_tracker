@@ -69,7 +69,7 @@ router.post('/addfile',upload.single('file'), async (req, res) => {
             }
 
             const fileUploadService = new FileUploadService(file)
-            const fileId = await fileUploadService.createFileUpload2(data.user.id,comment)
+            const fileId = await fileUploadService.createFileUpload2(data.user.id,-1,comment) // NEED TO CHANGE/ REROUTE
             if (fileId === 0) {
                 return res.status(500).json({
                     success: false,

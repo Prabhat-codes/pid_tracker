@@ -45,7 +45,7 @@ class FileService
         }
     }
     async uploadFile2(): Promise<UploadFileResponse> {
-        const uploadResponse = await fetch('http://localhost:5000/api/files/addfile', {
+        const uploadResponse = await fetch('http://localhost:5000/api/developer/uploadfile', {
             method: 'POST',
             headers:{
                 'auth-token':localStorage.getItem('token') || ''

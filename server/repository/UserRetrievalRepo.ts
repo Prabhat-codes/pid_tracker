@@ -97,7 +97,7 @@ class UserRetrievalRepo {
                 // ]
 
                 connection.query(
-                    `SELECT * FROM user WHERE user_id != ? AND currently_reviewing = false LIMIT 1`,
+                    `SELECT * FROM user WHERE user_id <> ? AND currently_reviewing = false LIMIT 1`,
                     [id],
                     (error, results) => {
                         if (error) {
@@ -113,6 +113,29 @@ class UserRetrievalRepo {
             return false
         }
 
+    }
+
+    async changeUserStatus(id:number,status:boolean) : Promise<boolean>{
+        try {
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    `UPDATE user 
+                     SET currently_reviewing =?
+                     WHERE user_id =?`,
+                    [status,id],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log("Change User Status" + results)
+                        resolve(true);
+                    }
+                ) 
+            })
+        } catch (error) {
+            return false
+        }
     }
 }
 
