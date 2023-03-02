@@ -33,7 +33,11 @@ const Login = (props) => {
     }
 
     return (
-        <div>
+        <div className="container d-flex align-items-center justify-content-center my-4">
+        <div className='card col-md-4'>
+            <div className="card-header text-center">
+                <h3 className="card-title">Login</h3>
+            </div>
             <form className='container my-3'  onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
@@ -48,6 +52,7 @@ const Login = (props) => {
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>
+    </div>
     )
 }
 

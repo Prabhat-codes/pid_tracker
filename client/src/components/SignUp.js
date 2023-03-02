@@ -33,7 +33,11 @@ const SignUp = () => {
         setCredentials({...credentials, [e.target.name]: e.target.value})
     }
   return (
-    <div>
+    <div className="container d-flex align-items-center justify-content-center my-4">
+    <div className='card col-md-4'>
+        <div className="card-header text-center">
+            <h3 className="card-title">SignUp</h3>
+        </div>
             <form className='container my-3'  onSubmit={handleSubmit}>
             <div className="mb-3">
                     <label htmlFor="name" className="form-label">UserName</label>
@@ -53,6 +57,7 @@ const SignUp = () => {
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>
+    </div>
   )
 }
 
