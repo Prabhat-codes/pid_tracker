@@ -72,6 +72,10 @@ class FileService
         const formData = new FormData()
         formData.append('file', this.file)
         formData.append('comment', this.comment)
+        
+        
+            formData.append('pass',localStorage.getItem('pass')!)
+        
         return formData
     }
 }

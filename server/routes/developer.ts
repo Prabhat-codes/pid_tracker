@@ -15,9 +15,55 @@ import FileUploadService from '../service/fileUploadService'
 import multer from 'multer'
 import FileRetrievalRepo from '../repository/FileRetrievalRepo';
 const upload = multer()
+const nodemailer = require("nodemailer");
 
 import User from '../models/User'
 const JWT_SECRET = 'Harryisagoodb$oy';
+
+
+async function sendMail(senderMail:string,receiverMail:string,pass:string):Promise<boolean>  {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    //let testAccount = await nodemailer.createTestAccount();
+  
+    // create reusable transporter object using the default SMTP transport
+    try {
+        let transporter = nodemailer.createTransport({
+            host: "smtp-mail.outlook.com",
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+              user: senderMail, // generated ethereal user
+              pass: pass, // generated ethereal password
+            },
+          });
+        
+          // send mail with defined transport object
+          let info = await transporter.sendMail({
+            from: `"Wells Fargo" <${senderMail}>`, // sender address
+            to: `${receiverMail}`, // list of receivers
+            subject: "PID Review Pending", // Subject line
+            text: "Hey,your PID Review is Pending", // plain text body
+            html: "<b>Hey,your PID Review is Pending</b>", // html body
+          });
+        
+          console.log("Message sent: %s", info.messageId);
+          // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+        
+          // Preview only available when sending through an Ethereal account
+          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+          return true;
+        
+    } catch (error) {
+
+        console.log(error);
+        return false;
+    }
+    
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }
+
 
 // Route 1 :(For uploading a new file) Add a NEW file to the server by first finding a user from the table whose currently_reviewing status is false and set it to true 
 router.post('/uploadfile', upload.single('file'), async (req, res) => {
@@ -34,6 +80,7 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
         const data = jwt.verify(token, JWT_SECRET);
         const file = req.file
         const comment = req.body.comment
+        const pass = req.body.pass
         const validFileType = await validateFileType(path.extname(file.originalname))
         const validFileSize = await validateFileSize(file.size)
         if (!validFileType.isValid || !validFileSize.isValid) {
@@ -42,6 +89,7 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
                 message: 'Invalid Request'
             })
         }
+        const sender = await UserRetrievalRepo.findUserById(data.user.id)
         // Method to get a user whose currentl_reviewing status is false
         const reviewer = await UserRetrievalRepo.getUserByStatus(data.user.id)
         if (!reviewer) {
@@ -70,6 +118,17 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
             })
         }
         // If there are errors, return Bad request and the errors
+        if(sender == false)
+        {
+            return res.status(500).json({
+                success: false,
+                message: 'Error uploading file'
+            })
+        }
+        const sendingMail = await sendMail(sender.email,reviewer.email,pass);
+        if(sendingMail == false){
+            console.log('error sending mail')
+        }
         console.log("file uploaded")
         res.json({
             success: true,

@@ -10,6 +10,7 @@ import {
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import SelectionScreen from './components/SelectionScreen';
 
 
 ReactDOM.render(
@@ -17,7 +18,10 @@ ReactDOM.render(
     <Router>
       <Navbar></Navbar>
           <Switch>
-            <Route path="/" element={<Main />} />
+            <Route path="/" element={<SelectionScreen></SelectionScreen>} />
+          </Switch>
+          <Switch>
+            <Route path="/main" element={<Main></Main>} />
           </Switch>
           <Switch>
             <Route path="/login" element={<Login />} />
@@ -25,7 +29,7 @@ ReactDOM.render(
           <Switch>
             <Route path="/signup" element={<SignUp></SignUp>} />
           </Switch>
-      </Router> 
+    </Router> 
   </div>
   ,
   document.getElementById('root')
