@@ -99,14 +99,14 @@ function FileUpload(props) {
                 alignItems="center"
                 mb="5"
             >
-                <Text fontSize="2xl" mb="4">Upload a Document</Text>
-                <Button
+                {/* <Text fontSize="2xl" mb="4">Upload a Document</Text> */}
+                {/* <Button
                     size="sm"
                     colorScheme="green"
                     onClick={() => setIsFilesTypeModalOpen(true)}
                 >
                     Accepted File Types
-                </Button>
+                </Button> */}
                 {
                     uploadFormError &&
                     <Text mt="5" color="red">{uploadFormError}</Text>

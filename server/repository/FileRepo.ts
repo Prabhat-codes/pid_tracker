@@ -17,10 +17,11 @@ class FileRepo {
         try {
             return await new Promise((resolve, reject) => {
                 connection.query(
-                    "INSERT INTO uploaded_file (user_id, reviewer_id, file_name, unique_file_name, file_size, file_extension, comment) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO uploaded_file (user_id, reviewer_id, reviewed, file_name, unique_file_name, file_size, file_extension, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     [
                         file.uid,
                         file.rid,
+                        file.reviewed,
                         file.originalFileName,
                         file.uniqueFileName,
                         file.fileSize,

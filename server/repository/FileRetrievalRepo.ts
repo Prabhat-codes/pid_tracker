@@ -61,12 +61,13 @@ class FileRetrievalRepo {
             return false
         }
     }
-    async findFileById(fileId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
+    async findFileById(fileId: number): Promise<false | { uniqueFileName: string, fileName: string, developerID:number }> {
         try {
             return await new Promise((resolve, reject) => {
                 const selects = [
                     'unique_file_name AS uniqueFileName',
-                    'file_name AS fileName'
+                    'file_name AS fileName',
+                    'user_id AS developerID',
                 ]
 
                 connection.query(
@@ -114,6 +115,33 @@ class FileRetrievalRepo {
         }
     }
 
+    async findFilesforDev(userId: number,rev:boolean): Promise<false | { fileId: number, fileName: string, comment:string }> {
+        try {
+            return await new Promise((resolve, reject) => {
+                const selects = [
+                    'file_id AS fileId',
+                    'file_name AS fileName',
+                    'comment AS comment',
+                ]
+
+                connection.query(
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE user_id = ? AND reviewed = ? LIMIT 1`,
+                    [userId,rev],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log(results)
+                        resolve(results)
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+    }
+
     async findReviewedFiles(userId: number): Promise<false | { uniqueFileName: string, fileName: string }> {
         try {
             return await new Promise((resolve, reject) => {
@@ -133,6 +161,50 @@ class FileRetrievalRepo {
                         resolve(results[0])
                     }
                 )
+            })
+        } catch (error) {
+            return false
+        }
+    }
+
+    async changeFileStatus(id:number,status:boolean) : Promise<boolean>{
+        try {
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    `UPDATE uploaded_file 
+                     SET reviewed =?
+                     WHERE file_id =?`,
+                    [status,id],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log("Change User Status" + results)
+                        resolve(true);
+                    }
+                ) 
+            })
+        } catch (error) {
+            return false
+        }
+    }
+    async deleteFileById(id:number) : Promise<boolean>{
+        try {
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    `DELETE FROM uploaded_file 
+                     WHERE file_id =?`,
+                    [id],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log("Deleted File")
+                        resolve(true);
+                    }
+                ) 
             })
         } catch (error) {
             return false

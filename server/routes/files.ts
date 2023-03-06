@@ -69,17 +69,17 @@ router.post('/addfile',upload.single('file'), async (req, res) => {
             }
 
             const fileUploadService = new FileUploadService(file)
-            const fileId = await fileUploadService.createFileUpload2(data.user.id,-1,comment) // NEED TO CHANGE/ REROUTE
-            if (fileId === 0) {
-                return res.status(500).json({
-                    success: false,
-                    message: 'Error uploading file'
-                })
-            }
+            // const fileId = await fileUploadService.createFileUpload2(data.user.id,-1,comment) // NEED TO CHANGE/ REROUTE
+            // if (fileId === 0) {
+            //     return res.status(500).json({
+            //         success: false,
+            //         message: 'Error uploading file'
+            //     })
+            // }
             // If there are errors, return Bad request and the errors
             res.json({
                 success: true,
-                fileId
+                
             })
             
 

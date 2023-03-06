@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import SelectionScreen from './components/SelectionScreen';
+import Dev from './components/Dev';
 
 
 ReactDOM.render(
@@ -21,7 +22,10 @@ ReactDOM.render(
             <Route path="/" element={<SelectionScreen></SelectionScreen>} />
           </Switch>
           <Switch>
-            <Route path="/main" element={<Main></Main>} />
+            <Route path="/rev" element={<Main></Main>} />
+          </Switch>
+          <Switch>
+            <Route path="/dev" element={<Dev></Dev>} />
           </Switch>
           <Switch>
             <Route path="/login" element={<Login />} />

@@ -109,7 +109,7 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
        }
        console.log("Marked reviewer status to true")
        const fileUploadService = new FileUploadService(file)
-       const userfileId = await fileUploadService.createFileUpload2(data.user.id,reviewer.user_id?reviewer.user_id:-1,comment)
+       const userfileId = await fileUploadService.createFileUpload2(data.user.id,reviewer.user_id?reviewer.user_id:-1,comment,false)
        //const reviewerfileId = await fileUploadService.createFileUpload2(reviewer.user_id,comment)
         if (userfileId === 0) {
             return res.status(500).json({
@@ -140,10 +140,45 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
     }
 })
 
-// Route 2 : (For Fetching Status Pending FIles) Fetch ALL files from the server which have reviewed == false and developer_id == current_user_id
+// Route 2 : (For Fetching Status Pending FIles) Fetch ALL files from the server which have reviewed == true and developer_id == current_user_id
+router.get('/approved',upload.none(),  async (req, res) => {
+    const token = req.header('auth-token');
+  if (!token) {
+      res.status(401).send({ error: "Please authenticate using a valid token" })
+  }
+  try {
+    const data = jwt.verify(token, JWT_SECRET);
+    const files = await FileRetrievalRepo.findFilesforDev(data.user.id,true)
+    var str = JSON.stringify(files)
+    var json = JSON.parse(str)
+    console.log("Developer Approved")
+    console.log(json)
+    res.send(json)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
 
-// Route 3 : (For Fetching Status Approved Files) Fetch ALL files from the server which have reviewed == true and developer_id == current_user_id
-
+// Route 3 : (For Fetching Status Approved Files) Fetch ALL files from the server which have reviewed == false and developer_id == current_user_id
+router.get('/pendingreview',upload.none(),  async (req, res) => {
+    const token = req.header('auth-token');
+  if (!token) {
+      res.status(401).send({ error: "Please authenticate using a valid token" })
+  }
+  try {
+    const data = jwt.verify(token, JWT_SECRET);
+    const files = await FileRetrievalRepo.findFilesforDev(data.user.id,false)
+    var str = JSON.stringify(files)
+    var json = JSON.parse(str)
+    console.log("Developer Pending")
+    console.log(json)
+    res.send(json)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
 // Route 4 : (For adding file to the server which are already reviewed) Add file to the server by making it's reviewed == true and sent it to the same user_id = revieiwer id
 
 

@@ -12,7 +12,9 @@ import {
     Input,
     createStandaloneToast
 } from '@chakra-ui/react'
-function Main() {
+import DevFileList from './DevFileList'
+import DevPendingFileList from './DevPendingFileList'
+function Dev() {
     const [fileId, setFileId] = useState<number>(0)
     const [username, setusername] = useState('')
     let navigate = useNavigate();
@@ -46,18 +48,22 @@ function Main() {
                 width="60%"
                 m="100px auto"
             >
-                {/* <Box mb="10">
+                <Box mb="10">
                     <Text fontSize="2xl" mb="4">Upload a Document</Text>
                     <FileUpload setFileId={setFileId} />
-                </Box> */}
+                </Box>
                 <div className="container my-3 mx-4" style={{fontSize:"150%"}}>
-                    <h1>Pending Files for Review</h1>
+                    <h1>Approved Files</h1>
                 </div>
-                <FileList fileId={fileId}/>
-                
+                <DevFileList fileId={fileId}/>
+                <div className="container my-3 mx-4" style={{fontSize:"150%"}}>
+                    <h1>Pending Files</h1>
+                </div>
+                <DevPendingFileList fileId={fileId}></DevPendingFileList>
+
             </Box>
         </ChakraProvider>
     )
 }
 
-export default Main
+export default Dev

@@ -7,6 +7,7 @@ class FileService
 {
     private file: File
     private comment:string
+    
 
     constructor(file: File,comment:string) {
         this.file = file
@@ -67,6 +68,33 @@ class FileService
             message: 'Uploaded Successfully'
         }
     }
+    async uploadFile3(fileID:number): Promise<UploadFileResponse> {
+        const data = this.getFormData();
+        console.log("uploadfile3 : "+ fileID);
+        data.append('fid', fileID.toString());
+        const uploadResponse = await fetch('http://localhost:5000/api/reviewer/uploadfile', {
+            method: 'POST',
+            headers:{
+                'auth-token':localStorage.getItem('token') || ''
+            },
+            body: data
+        })
+
+        const responseJson = await uploadResponse.json()
+
+        if (responseJson.success === false) {
+            return {
+                success: false,
+                message: responseJson.message
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Uploaded Successfully'
+        }
+    }
+
 
     private getFormData(): FormData {
         const formData = new FormData()
