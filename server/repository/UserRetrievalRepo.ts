@@ -88,7 +88,7 @@ class UserRetrievalRepo {
 
     }
 
-    async getUserByStatus(id:number): Promise<false | User> {
+    async getUserByStatus(id:number, status:boolean): Promise<false | User> {
         try {
             return await new Promise((resolve, reject) => {
                 // const selects = [
@@ -97,8 +97,8 @@ class UserRetrievalRepo {
                 // ]
 
                 connection.query(
-                    `SELECT * FROM user WHERE user_id <> ? AND currently_reviewing = false LIMIT 1`,
-                    [id],
+                    `SELECT * FROM user WHERE user_id <> ? AND currently_reviewing = ? LIMIT 1`,
+                    [id,status],
                     (error, results) => {
                         if (error) {
                             console.log(error)

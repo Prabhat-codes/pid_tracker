@@ -64,7 +64,7 @@ function DevFileList(props) {
             //console.log(response)
             return response.json()}).then(data => {
             console.log(data)
-            setFileList(data)
+            setFileList(data.reverse())
             console.log(fileList)
         })
     }, [])

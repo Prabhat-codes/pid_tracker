@@ -64,7 +64,7 @@ function DevPendingFileList(props) {
             //console.log(response)
             return response.json()}).then(data => {
             console.log(data)
-            setFileList(data)
+            setFileList(data.reverse())
             console.log(fileList)
         })
     }, [])
@@ -237,7 +237,7 @@ function DevPendingFileList(props) {
                                 <h5 className="card-title"><b>Comment:</b></h5>
                                 <p className="card-text my-3">{comment}</p>
                                 <Link to="/" onClick={() => handleFileDownload(fileId)} className="btn btn-outline-primary mx-3">Download File</Link>
-                                <Link to="/" onClick={() => handleFileUpdate(fileId,fileName,comment)} className="btn btn-outline-primary">Review</Link>
+                                <Link to="/" onClick={() => handleFileUpdate(fileId,fileName,comment)} className="btn btn-outline-primary d-none">Review</Link>
                             </div>
                             <div className="card-footer text-muted">
                                 2 days ago

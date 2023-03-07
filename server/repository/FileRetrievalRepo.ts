@@ -124,7 +124,7 @@ class FileRetrievalRepo {
                 ]
 
                 connection.query(
-                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE reviewer_id = ? AND reviewed = false LIMIT 1`,
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE reviewer_id = ? AND reviewed = false`,
                     [userId],
                     (error, results) => {
                         if (error) {
