@@ -87,6 +87,32 @@ class FileRetrievalRepo {
             return false
         }
     }
+    async findFileById2(fileId: number): Promise<false | { uniqueFileName: string, fileName: string, revID:number }> {
+        try {
+            return await new Promise((resolve, reject) => {
+                const selects = [
+                    'unique_file_name AS uniqueFileName',
+                    'file_name AS fileName',
+                    'reviewer_id AS revID',
+                ]
+
+                connection.query(
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE file_id = ? LIMIT 1`,
+                    [fileId],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log(results)
+                        resolve(results[0])
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+    }
 
     async findPendingFilesforReview(userId: number): Promise<false | { fileId: number, fileName: string, comment:string }> {
         try {
@@ -125,7 +151,7 @@ class FileRetrievalRepo {
                 ]
 
                 connection.query(
-                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE user_id = ? AND reviewed = ? LIMIT 1`,
+                    `SELECT ${selects.join(',')} FROM uploaded_file WHERE user_id = ? AND reviewed = ?`,
                     [userId,rev],
                     (error, results) => {
                         if (error) {

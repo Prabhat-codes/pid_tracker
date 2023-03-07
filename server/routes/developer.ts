@@ -21,7 +21,7 @@ import User from '../models/User'
 const JWT_SECRET = 'Harryisagoodb$oy';
 
 
-async function sendMail(senderMail:string,receiverMail:string,pass:string):Promise<boolean>  {
+async function sendMail(senderMail:string,receiverMail:string,pass:string,comment:string):Promise<boolean>  {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     //let testAccount = await nodemailer.createTestAccount();
@@ -44,7 +44,7 @@ async function sendMail(senderMail:string,receiverMail:string,pass:string):Promi
             to: `${receiverMail}`, // list of receivers
             subject: "PID Review Pending", // Subject line
             text: "Hey,your PID Review is Pending", // plain text body
-            html: "<b>Hey,your PID Review is Pending</b>", // html body
+            html: `<b>${comment}</b>`, // html body
           });
         
           console.log("Message sent: %s", info.messageId);
@@ -125,7 +125,7 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
                 message: 'Error uploading file'
             })
         }
-        const sendingMail = await sendMail(sender.email,reviewer.email,pass);
+        const sendingMail = await sendMail(sender.email,reviewer.email,pass,comment);
         if(sendingMail == false){
             console.log('error sending mail')
         }
@@ -179,9 +179,101 @@ router.get('/pendingreview',upload.none(),  async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 })
-// Route 4 : (For adding file to the server which are already reviewed) Add file to the server by making it's reviewed == true and sent it to the same user_id = revieiwer id
+// Route 4 : (For adding file to the server which are already reviewed) Add file to the server by making it's reviewed == false and sent it to the same user_id = revieiwer id
 
-
+router.post('/uploadfilerev', upload.single('file'), async (req, res) => {
+    console.log("rev hello")
+    const token = req.header('auth-token');
+    if (!token) {
+        res.status(401).send({ error: "Please authenticate using a valid token" })
+    }
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const data = jwt.verify(token, JWT_SECRET);
+        const file = req.file
+        const comment = req.body.comment
+        const pass = req.body.pass
+        const fid = req.body.fid
+        console.log("dev hello:"+fid)
+        const validFileType = await validateFileType(path.extname(file.originalname))
+        const validFileSize = await validateFileSize(file.size)
+        if (!validFileType.isValid || !validFileSize.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Request'
+            })
+        }
+        const rev = await FileRetrievalRepo.findFileById2(fid)
+        if (!rev) {
+            return res.status(400).json({
+                success: false,
+                message: 'Could not find file with the specific dev'
+            })
+        }
+        const developer = await UserRetrievalRepo.findUserById(data.user.id)
+        // Method to get a user whose currentl_reviewing status is false
+        // const reviewer = await UserRetrievalRepo.getUserByStatus(data.user.id)
+        if (!developer) {
+            return res.status(400).json({
+                success: false,
+                message: 'Could not find reviewer'
+            })
+        }
+        // console.log("Got a user")
+        // Method to set the current_reviewing status of the reviewer to false
+       const success = await UserRetrievalRepo.changeUserStatus(rev.revID, true)
+       if (!success) {
+        return res.status(400).json({
+            success: false,
+            message: 'Failed to change user status'
+        })
+       }
+       console.log("Marked reviewer status to false")
+  
+       const reviewer = await UserRetrievalRepo.findUserById(rev.revID)
+       if (!reviewer) {
+        return res.status(400).json({
+            success: false,
+            message: 'Could not find reviewer'
+        })
+      }
+      // Method to chage the reviewed status of the file to true
+      const filechanged = await FileRetrievalRepo.deleteFileById(fid)
+      if(filechanged == false)
+      {
+        return res.status(400).json({
+          success: false,
+          message: 'Failed to delete file'
+      })
+      }
+       const fileUploadService = new FileUploadService(file)
+       const userfileId = await fileUploadService.createFileUpload2(data.user.id,reviewer.user_id? reviewer.user_id : -1,comment,false)
+       //const reviewerfileId = await fileUploadService.createFileUpload2(reviewer.user_id,comment)
+        if (userfileId === 0) {
+            return res.status(500).json({
+                success: false,
+                message: 'Error uploading file'
+            })
+        }
+        // If there are errors, return Bad request and the errors
+        
+        const sendingMail = await sendMail(developer.email,reviewer.email,pass,comment);
+        if(sendingMail == false){
+            console.log('error sending mail')
+        }
+        console.log("file uploaded")
+        res.json({
+            success: true,
+            userfileId
+        })
+        
+    } catch (error) {
+        console.log(error)
+    }
+  })
 
 
 module.exports = router

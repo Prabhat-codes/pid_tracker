@@ -95,6 +95,33 @@ class FileService
         }
     }
 
+    async uploadFile4(fileID:number): Promise<UploadFileResponse> {
+        const data = this.getFormData();
+        console.log("uploadfile4 : "+ fileID);
+        data.append('fid', fileID.toString());
+        const uploadResponse = await fetch('http://localhost:5000/api/developer/uploadfilerev', {
+            method: 'POST',
+            headers:{
+                'auth-token':localStorage.getItem('token') || ''
+            },
+            body: data
+        })
+
+        const responseJson = await uploadResponse.json()
+
+        if (responseJson.success === false) {
+            return {
+                success: false,
+                message: responseJson.message
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Uploaded Successfully'
+        }
+    }
+
 
     private getFormData(): FormData {
         const formData = new FormData()

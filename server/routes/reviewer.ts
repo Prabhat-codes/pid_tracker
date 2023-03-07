@@ -20,7 +20,7 @@ const nodemailer = require("nodemailer");
 import User from '../models/User'
 const JWT_SECRET = 'Harryisagoodb$oy';
 
-async function sendMail(senderMail:string,receiverMail:string,pass:string):Promise<boolean>  {
+async function sendMail(senderMail:string,receiverMail:string,pass:string,comment:string):Promise<boolean>  {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   //let testAccount = await nodemailer.createTestAccount();
@@ -43,7 +43,7 @@ async function sendMail(senderMail:string,receiverMail:string,pass:string):Promi
           to: `${receiverMail}`, // list of receivers
           subject: "PID Review Done", // Subject line
           text: "Hey,your PID Review is Done", // plain text body
-          html: "<b>Hey,your PID Review is Done</b>", // html body
+          html: `<b>${comment}</b>`, // html body
         });
       
         console.log("Message sent: %s", info.messageId);
@@ -185,7 +185,7 @@ router.post('/uploadfile', upload.single('file'), async (req, res) => {
       }
       // If there are errors, return Bad request and the errors
       
-      const sendingMail = await sendMail(reviewer.email,receiver.email,pass);
+      const sendingMail = await sendMail(reviewer.email,receiver.email,pass,comment);
       if(sendingMail == false){
           console.log('error sending mail')
       }

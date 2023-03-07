@@ -155,7 +155,7 @@ function DevFileList(props) {
         }
         console.log(file)
         const fileService = new FileService(file[0],comment)
-        const fileUploadResponse = await fileService.uploadFile3(efile.fileId)
+        const fileUploadResponse = await fileService.uploadFile4(efile.fileId)
 
         element.value = ''
 
@@ -217,7 +217,7 @@ function DevFileList(props) {
                         </div>
                         <div className="modal-footer">
                             <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button disabled={efile.comment.length<5} onClick={handleClick} type="button" className="btn btn-primary">Update Note</button>
+                            <button  onClick={handleClick} type="button" className="btn btn-primary">Update Note</button>
                         </div>
                     </div>
                 </div>
