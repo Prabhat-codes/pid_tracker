@@ -85,6 +85,57 @@ class UserRetrievalRepo {
         } catch (error) {
             return false
         }
+
+    }
+
+    async getUserByStatus(id:number, status:boolean): Promise<false | User> {
+        try {
+            return await new Promise((resolve, reject) => {
+                // const selects = [
+                //     'unique_User_name AS password',
+                //     'User_name AS email'
+                // ]
+
+                connection.query(
+                    `SELECT * FROM user WHERE user_id <> ? AND currently_reviewing = ? LIMIT 1`,
+                    [id,status],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log(results)
+                        resolve(results[0])
+                    }
+                )
+            })
+        } catch (error) {
+            return false
+        }
+
+    }
+
+    async changeUserStatus(id:number,status:boolean) : Promise<boolean>{
+        try {
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    `UPDATE user 
+                     SET currently_reviewing =?
+                     WHERE user_id =?`,
+                    [status,id],
+                    (error, results) => {
+                        if (error) {
+                            console.log(error)
+                            reject(false)
+                        }
+                        console.log("Change User Status" + results)
+                        resolve(true);
+                    }
+                ) 
+            })
+        } catch (error) {
+            return false
+        }
     }
 }
 

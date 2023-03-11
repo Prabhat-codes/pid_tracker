@@ -15,9 +15,9 @@ class FileUploadService
         return path.extname(this.file.originalname)
     }
 
-    async createFileUpload2(uid:number): Promise<number> {
+    async createFileUpload2(uid:number,rid:number,comment:string,reviewed:boolean): Promise<number> {
         const uniqueFileName = this.createUniqueFileName()
-        const fileId = await this.createFileRecord2(uniqueFileName,uid)
+        const fileId = await this.createFileRecord2(uniqueFileName,uid,rid,comment,reviewed)
         
         this.writeToFileStream(uniqueFileName)
 
@@ -25,8 +25,8 @@ class FileUploadService
     }
     async createFileUpload(): Promise<number> {
         const uniqueFileName = this.createUniqueFileName()
-        const fileId = await this.createFileRecord(uniqueFileName)
-        
+        //const fileId = await this.createFileRecord(uniqueFileName)
+        const fileId = 1
         this.writeToFileStream(uniqueFileName)
 
         return fileId
@@ -37,23 +37,26 @@ class FileUploadService
         return `${uuidv4()}_${timeStamp}${this.getFileExtension()}`
     }
 
-    private async createFileRecord2(uniqueFileName: string,uid:number): Promise<number> {
+    private async createFileRecord2(uniqueFileName: string,uid:number,rid:number,ucomment:string,hasReviewed:boolean): Promise<number> {
         return await fileRepo.createFileRecord({
             uid,
+            rid,
+            reviewed:hasReviewed,
             originalFileName: this.file.originalname,
             uniqueFileName,
             fileSize: this.file.size,
             fileExtension: this.getFileExtension(),
+            comment: ucomment
         })
     }
-    private async createFileRecord(uniqueFileName: string): Promise<number> {
-        return await fileRepo.createFileRecord({
-            originalFileName: this.file.originalname,
-            uniqueFileName,
-            fileSize: this.file.size,
-            fileExtension: this.getFileExtension(),
-        })
-    }
+    // private async createFileRecord(uniqueFileName: string): Promise<number> {
+    //     return await fileRepo.createFileRecord({
+    //         originalFileName: this.file.originalname,
+    //         uniqueFileName,
+    //         fileSize: this.file.size,
+    //         fileExtension: this.getFileExtension(),
+    //     })
+    // }
 
     private writeToFileStream(uniqueFileName: string) {
         const fileStream = fs.createWriteStream(`${__dirname}/../img/${uniqueFileName}`)

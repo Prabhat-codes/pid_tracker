@@ -3,7 +3,9 @@ interface User {
     UserName: string,
     email:string,
     password:string,
-    uniqueFileName: string,
+    currently_reviewing:boolean,
+    sent_id?:number,
+    received_id?:number
 }
 
 export default User

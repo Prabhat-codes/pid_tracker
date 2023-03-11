@@ -13,8 +13,12 @@ app.use(cors({
 
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/files', require('./routes/files'))
+app.use('/api/developer', require('./routes/developer'))
+app.use('/api/reviewer', require('./routes/reviewer'))
 app.post('/uploadFile', upload.single('file'), fileController.uploadFile)
 app.get('/getFiles', upload.none(), fileController.getFiles)
 app.get('/downloadFile/:id', upload.none(), fileController.downloadFile)
 
 app.listen(5000, () => console.log('server is running'))
+
+export default app
